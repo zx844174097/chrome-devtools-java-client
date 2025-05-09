@@ -134,7 +134,7 @@ public class ChromeServiceImpl implements ChromeService {
 
   @Override
   public ChromeTab createTab(String tab) throws ChromeServiceException {
-    return requestGet(ChromeTab.class, "http://%s:%d/%s?%s", host, port, CREATE_TAB, tab);
+    return requestPut(ChromeTab.class, "http://%s:%d/%s?%s", host, port, CREATE_TAB, tab);
   }
 
   @Override
