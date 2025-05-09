@@ -4,7 +4,7 @@ package com.github.kklisura.cdt.services.impl;
  * #%L
  * cdt-java-client
  * %%
- * Copyright (C) 2018 - 2021 Kenan Klisura
+ * Copyright (C) 2018 - 2025 Kenan Klisura
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ public class ChromeServiceImpl implements ChromeService {
 
   @Override
   public List<ChromeTab> getTabs() throws ChromeServiceException {
-    return Arrays.asList(request(ChromeTab[].class, "http://%s:%d/%s", host, port, LIST_TABS));
+    return Arrays.asList(requestPut(ChromeTab[].class, "http://%s:%d/%s", host, port, LIST_TABS));
   }
 
   @Override
@@ -134,17 +134,17 @@ public class ChromeServiceImpl implements ChromeService {
 
   @Override
   public ChromeTab createTab(String tab) throws ChromeServiceException {
-    return request(ChromeTab.class, "http://%s:%d/%s?%s", host, port, CREATE_TAB, tab);
+    return requestGet(ChromeTab.class, "http://%s:%d/%s?%s", host, port, CREATE_TAB, tab);
   }
 
   @Override
   public void activateTab(ChromeTab tab) throws ChromeServiceException {
-    request(Void.class, "http://%s:%d/%s/%s", host, port, ACTIVATE_TAB, tab.getId());
+    requestGet(Void.class, "http://%s:%d/%s/%s", host, port, ACTIVATE_TAB, tab.getId());
   }
 
   @Override
   public void closeTab(ChromeTab tab) throws ChromeServiceException {
-    request(Void.class, "http://%s:%d/%s/%s", host, port, CLOSE_TAB, tab.getId());
+    requestGet(Void.class, "http://%s:%d/%s/%s", host, port, CLOSE_TAB, tab.getId());
 
     // Remove dev tools from cache.
     clearChromeDevToolsServiceCache(tab);
@@ -152,7 +152,7 @@ public class ChromeServiceImpl implements ChromeService {
 
   @Override
   public ChromeVersion getVersion() throws ChromeServiceException {
-    return request(ChromeVersion.class, "http://%s:%d/%s", host, port, VERSION);
+    return requestGet(ChromeVersion.class, "http://%s:%d/%s", host, port, VERSION);
   }
 
   @Override
@@ -261,15 +261,19 @@ public class ChromeServiceImpl implements ChromeService {
    * @return Response object.
    * @throws ChromeServiceException If sending request fails due to any reason.
    */
-  private static <T> T request(Class<T> responseType, String path, Object... params)
+  private static <T> T requestGet(Class<T> responseType, String path, Object... params)
       throws ChromeServiceException {
+    return request("GET", responseType, path, params);
+  }
+
+  private static <T> T request(String type, Class<T> responseType, String path, Object... params) {
     HttpURLConnection connection = null;
     InputStream inputStream = null;
 
     try {
       URL uri = new URL(String.format(path, params));
       connection = (HttpURLConnection) uri.openConnection();
-
+      connection.setRequestMethod(type);
       int responseCode = connection.getResponseCode();
       if (HttpURLConnection.HTTP_OK == responseCode) {
         if (Void.class.equals(responseType)) {
@@ -305,6 +309,10 @@ public class ChromeServiceImpl implements ChromeService {
     }
   }
 
+  private <T> T requestPut(Class<T> responseType, String path, Object... params)
+      throws ChromeServiceException {
+    return request("PUT", responseType, path, params);
+  }
   /**
    * Converts input stream to string. If input string is null, it returns empty string.
    *

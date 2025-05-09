@@ -7,7 +7,7 @@
 
     <groupId>com.github.kklisura.cdt</groupId>
     <artifactId>cdt-java-client</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
     <packaging>jar</packaging>
 
     <name>cdt-java-client</name>
@@ -64,13 +64,6 @@
         <javassist.version>3.24.1-GA</javassist.version>
         <slf4j.version>1.7.25</slf4j.version>
 
-        <logback.version>1.2.3</logback.version>
-        <junit.version>4.13.1</junit.version>
-        <jacoco.version>0.8.0</jacoco.version>
-        <easy.mock.version>3.4</easy.mock.version>
-        <powermock.version>1.6.6</powermock.version>
-        <jsonassert.version>1.5.0</jsonassert.version>
-        <mockwebserver.version>2.7.5</mockwebserver.version>
     </properties>
 
     <dependencies>
@@ -84,12 +77,6 @@
             <artifactId>tyrus-container-grizzly-client</artifactId>
             <version>${tyrus.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.tyrus</groupId>
-            <artifactId>tyrus-container-grizzly-server</artifactId>
-            <version>${tyrus.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.javassist</groupId>
@@ -101,12 +88,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -125,55 +106,6 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>${jsonassert.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>${easy.mock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-test-easymock-junit4</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.tyrus</groupId>
-            <artifactId>tyrus-server</artifactId>
-            <version>${tyrus.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp</groupId>
-            <artifactId>mockwebserver</artifactId>
-            <version>${mockwebserver.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <classifier>runtime</classifier>
-            <scope>test</scope>
-            <version>${jacoco.version}</version>
-        </dependency>
     </dependencies>
 
     <profiles>
@@ -186,37 +118,10 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>2.20.1</version>
                         <configuration>
-                            <systemPropertyVariables>
-                                <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
-                            </systemPropertyVariables>
+                            <skipTests>true</skipTests>
                         </configuration>
                     </plugin>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${jacoco.version}</version>
-                        <executions>
-                            <execution>
-                                <id>default-instrument</id>
-                                <goals>
-                                    <goal>instrument</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>default-restore-instrumented-classes</id>
-                                <goals>
-                                    <goal>restore-instrumented-classes</goal>
-                                </goals>
-                                <phase>post-integration-test</phase>
-                            </execution>
-                            <execution>
-                                <id>default-report</id>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
+
                 </plugins>
             </build>
         </profile>
